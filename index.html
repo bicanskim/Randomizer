@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <title>Random broj</title>
+</head>
+<body>
+
+    <h1 id="rezultat">?</h1>
+    <p id="opis">Unesi opseg i izaberi tip broja</p>
+
+    <div class="input-grupa">
+        <label for="min">Min:</label>
+        <input type="number" id="min" placeholder="npr. 2">
+
+        <label for="max">Max:</label>
+        <input type="number" id="max" placeholder="npr. 8">
+    </div>
+
+    <div>
+        <label><input type="radio" name="tip" value="svi" checked> Svi</label>
+        <label><input type="radio" name="tip" value="parni"> Parni</label>
+        <label><input type="radio" name="tip" value="neparni"> Neparni</label>
+    </div>
+
+    <br>
+    <button id="btn" onclick="generisi()">Generiši</button>
+
+    <script>
+        function generisi() {
+            const min = parseInt(document.getElementById("min").value);
+            const max = parseInt(document.getElementById("max").value);
+            const tip = document.querySelector('input[name="tip"]:checked').value;
+            const rezultatEl = document.getElementById("rezultat");
+            const opisEl = document.getElementById("opis");
+            const btn = document.getElementById("btn");
+
+            if (isNaN(min) || isNaN(max) || min > max) {
+                alert("Unesi validan opseg!");
+                return;
+            }
+
+            let brojevi = [];
+            for (let i = min; i <= max; i++) {
+                if (
+                    tip === "svi" ||
+                    (tip === "parni" && i % 2 === 0) ||
+                    (tip === "neparni" && i % 2 !== 0)
+                ) {
+                    brojevi.push(i);
+                }
+            }
+
+            if (brojevi.length === 0) {
+                alert("Nema brojeva za izabrane uslove!");
+                return;
+            }
+
+            btn.disabled = true;
+
+            let brojac = 0;
+
+            const interval = setInterval(() => {
+                const randomIndex = Math.floor(Math.random() * brojevi.length);
+                rezultatEl.textContent = brojevi[randomIndex];
+
+                rezultatEl.classList.add("animacija");
+                setTimeout(() => rezultatEl.classList.remove("animacija"), 100);
+
+                brojac++;
+
+                if (brojac > 10) {
+                    clearInterval(interval);
+
+                    const finalIndex = Math.floor(Math.random() * brojevi.length);
+                    const broj = brojevi[finalIndex];
+
+                    rezultatEl.textContent = broj;
+                    opisEl.textContent = "Izvučen broj: " + broj;
+
+                    btn.disabled = false;
+                }
+
+            }, 100);
+        }
+    </script>
+
+</body>
+</html>
